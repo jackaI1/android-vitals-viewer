@@ -11,3 +11,5 @@ The local sandbox uses unchanged bridge commit `c538aa220a40e0e322599d4edccc5267
 - Instrumented tests on a local Android 15 / API 35 ARM64 emulator: **6 passed** (5 Compose screen checks and 1 full bridge journey). The journey approves consent, reads all three vital signs, checks automatic token renewal, reopens a saved snapshot with no session, expires the server session, retains the saved readings and clears the cache on sign-out.
 
 The sandbox proves the app-to-bridge contract and the bridge's SMART token lifecycle against a simulated authorization/FHIR upstream. It does not prove a live hospital connection or Android login to OpenEMR's default self-signed TLS setup. Real OpenEMR setup and that certificate boundary are described in `setup.md`.
+
+I inspected the [emulator screenshot](screenshots/vitals.png) for readable labels, charts, units and source-value lists. CI also collects this screenshot from the instrumented journey.

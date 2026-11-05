@@ -37,9 +37,10 @@ class BridgeJourneyTest {
             // Espresso waits for the real WebView consent page; no cookie or token is injected.
             approve()
             waitFor("Up to date. Fictional records only.")
-            compose.onNodeWithText("70.0 /min").performScrollTo().assertIsDisplayed()
+            compose.onNodeWithText("70.0 bpm").performScrollTo().assertIsDisplayed()
             compose.onNodeWithText("SpO₂").performScrollTo().assertIsDisplayed()
             compose.onNodeWithText("99.0 %").performScrollTo().assertIsDisplayed()
+            compose.onNodeWithText("Heart rate").performScrollTo()
             val screenshot = InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
             val output = InstrumentationRegistry.getArguments().getString("additionalTestOutputDir")
                 ?.let(::File) ?: context.getExternalFilesDir(null)!!
@@ -60,7 +61,7 @@ class BridgeJourneyTest {
             activity.close()
             activity = ActivityScenario.launch(MainActivity::class.java)
             waitFor("Saved snapshot. Sign in to check for updates.")
-            compose.onNodeWithText("70.0 /min").performScrollTo().assertIsDisplayed()
+            compose.onNodeWithText("70.0 bpm").performScrollTo().assertIsDisplayed()
             compose.onNodeWithText("Sign in with SMART on FHIR").performScrollTo().performClick()
             waitFor("Approve access to the fictional records in the bridge sign-in page.")
             approve()
@@ -69,7 +70,7 @@ class BridgeJourneyTest {
             try { request.requestMethod = "POST"; check(request.responseCode == 200) } finally { request.disconnect() }
             compose.onNodeWithText("Refresh").performScrollTo().performClick()
             waitFor("Session expired. Sign in again. Showing saved snapshot.")
-            compose.onNodeWithText("70.0 /min").performScrollTo().assertIsDisplayed()
+            compose.onNodeWithText("70.0 bpm").performScrollTo().assertIsDisplayed()
             compose.onNodeWithText("Sign out and clear cache").performScrollTo().performClick()
             waitFor("Signed out. Saved snapshots cleared.")
             compose.onNodeWithText("No saved measurements").performScrollTo().assertIsDisplayed()

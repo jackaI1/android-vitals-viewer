@@ -32,6 +32,12 @@ private val VitalsColors = lightColorScheme(primary = Blue, secondary = Teal, ba
     surface = Color.White, onSurface = Ink, onBackground = Ink)
 private fun timestamp(time: Long) = DateTimeFormatter.ofPattern("MMM d, HH:mm 'UTC'", Locale.US)
     .withZone(ZoneOffset.UTC).format(Instant.ofEpochMilli(time))
+fun displayUnit(unit: String) = when (unit) {
+    "/min" -> "bpm"
+    "Cel" -> "°C"
+    "[degF]" -> "°F"
+    else -> unit
+}
 fun displayValue(value: Double) = String.format(Locale.US, "%.1f", value)
 
 class MainActivity : ComponentActivity() {
@@ -99,11 +105,11 @@ fun VitalsScreen(state: ScreenState, connect: (String, String) -> Unit, refresh:
                     rows.groupBy { r -> r.unit }.forEach { (unit, readings) ->
                         val valid = readings.filter { r -> r.value != null && r.time != null }.sortedBy { r -> r.time }
                         if (valid.isNotEmpty()) {
-                            Text("${displayValue(valid.last().value!!)} $unit", style = MaterialTheme.typography.headlineMedium, color = Blue)
-                            TrendChart(valid, "$label ($unit)")
+                            Text("${displayValue(valid.last().value!!)} ${displayUnit(unit)}", style = MaterialTheme.typography.headlineMedium, color = Blue)
+                            TrendChart(valid, "$label (${displayUnit(unit)})")
                         }
                         readings.sortedBy { r -> r.time }.forEach { r ->
-                            Text("${r.time?.let(::timestamp) ?: "Time unavailable"}: ${r.value?.let(::displayValue) ?: "No value"} ${r.unit} · ${r.note}",
+                            Text("${r.time?.let(::timestamp) ?: "Time unavailable"}: ${r.value?.let(::displayValue) ?: "No value"} ${displayUnit(r.unit)} · ${r.note}",
                                 style = MaterialTheme.typography.bodyMedium)
                         }
                     }

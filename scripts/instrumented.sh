@@ -3,6 +3,7 @@ set -euo pipefail
 python3 - <<'PY_CHECK'
 import socket
 with socket.socket() as probe:
+    probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     probe.bind(("127.0.0.1", 8000))  # Refuse to reuse somebody else's listener.
 PY_CHECK
 # This shell owns exactly this PID and port. The emulator is owned by the action.

@@ -4,6 +4,8 @@ I built a phone app for comparing fictional patients' measurements because I wan
 
 The app shows heart rate, temperature and blood oxygen (SpO₂) as a small chart and a list of readings for each visit. I sign in, approve access to fictional records, and choose a visit. Refresh checks for new readings. If the bridge goes offline or my session expires, I can still read the saved copy and see when it was saved.
 
+[See the measurements screen](docs/screenshots/vitals.png). The readings shown are fictional.
+
 ## Try it
 
 I use the included local sandbox first. It has two fictional visits with 18 measurements, a consent page and short-lived access so I can exercise sign-in and renewal without an account. It runs the actual [fhir-emr-bridge](https://github.com/jackaI1/fhir-emr-bridge) service with a simulated record server. It does not contact a real patient database.
@@ -24,7 +26,7 @@ Leave that terminal open. Open this folder in Android Studio, let it install SDK
 adb reverse tcp:8000 tcp:8000
 ```
 
-Keep the app's default bridge URL and fictional patient UUID. Tap **Sign in with SMART on FHIR**, then **Approve fictional records**. Choose either visit and scroll to the three charts. The values are also written underneath each chart. Cancel or deny returns no records.
+Keep the app's default bridge URL and fictional patient UUID. Tap **Sign in with SMART on FHIR** (the record system's permission process), then **Approve fictional records**. Choose either visit and scroll to the three charts. The values are also written underneath each chart. Cancel or deny returns no records.
 
 Stop the sandbox with Ctrl-C when finished, then run `adb reverse --remove tcp:8000`. [The setup guide](docs/setup.md) includes command-line builds, testing session expiry, and connecting to my existing OpenEMR demo.
 
@@ -55,4 +57,4 @@ uv run --no-project pytest -q tests
 bash scripts/instrumented.sh
 ```
 
-The APK is at `app/build/outputs/apk/debug/app-debug.apk`. [GitHub Actions](https://github.com/jackaI1/android-vitals-viewer/actions) builds it, runs Android lint and the tests, and uploads the APK and reports. The checks cover parsing, Room persistence and cache isolation, HTTP session failures, Compose screens, and a real browser-consent-to-chart journey through the bridge. The sandbox job also runs the pinned bridge's existing 89 tests. Measured results are recorded in [verification notes](docs/verification.md).
+The APK is at `app/build/outputs/apk/debug/app-debug.apk`. [GitHub Actions](https://github.com/jackaI1/android-vitals-viewer/actions) builds it, runs Android lint and the tests, and uploads the APK and reports. The checks cover parsing, Room persistence and cache isolation, HTTP session failures, Compose screens, and a real browser-consent-to-chart journey through the bridge. The sandbox job also runs the pinned bridge's existing 89 tests. There are 32 JUnit/Robolectric tests, 6 instrumented UI tests and 4 sandbox integration tests, plus the bridge’s 89 regression tests. Measured results are recorded in [verification notes](docs/verification.md).

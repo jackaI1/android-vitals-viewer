@@ -26,9 +26,9 @@ class VitalsScreenTest {
         val report = VisitReport("fictional", listOf(Visit("first", "today", listOf(row)),
             Visit("second", "tomorrow", listOf(row.copy(value = 80.0)))), 1, 2)
         compose.setContent { MaterialTheme { VitalsScreen(ScreenState(report = report), { _, _ -> }, {}, {}) } }
-        compose.onNodeWithText("68.0 /min").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("68.0 bpm").performScrollTo().assertIsDisplayed()
         compose.onNodeWithText("Visit second").performScrollTo().performClick()
-        compose.onNodeWithText("80.0 /min").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("80.0 bpm").performScrollTo().assertIsDisplayed()
         compose.onAllNodesWithText("No measurement recorded").assertCountEquals(2) // Missing vital is explicit.
     }
     @Test fun expiredSessionGivesRecoveryAction() {
