@@ -27,4 +27,10 @@ adb reverse tcp:8000 tcp:8000
 ./gradlew --no-daemon connectedDebugAndroidTest
 
 mkdir -p app/build/reports/screenshots
-adb pull /sdcard/Android/data/ca.jacklai.vitals/files/vitals.png app/build/reports/screenshots/vitals.png
+python3 - <<'PY_SCREENSHOT'
+from pathlib import Path
+import shutil
+images = list(Path('app/build/outputs/connected_android_test_additional_output').rglob('vitals.png'))
+assert images, 'The bridge journey screenshot was not collected'
+shutil.copy2(images[0], 'app/build/reports/screenshots/vitals.png')
+PY_SCREENSHOT

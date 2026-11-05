@@ -41,7 +41,10 @@ class BridgeJourneyTest {
             compose.onNodeWithText("SpO₂").performScrollTo().assertIsDisplayed()
             compose.onNodeWithText("99.0 %").performScrollTo().assertIsDisplayed()
             val screenshot = InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
-            File(context.getExternalFilesDir(null), "vitals.png").outputStream().use {
+            val output = InstrumentationRegistry.getArguments().getString("additionalTestOutputDir")
+                ?.let(::File) ?: context.getExternalFilesDir(null)!!
+            output.mkdirs()
+            File(output, "vitals.png").outputStream().use {
                 screenshot.compress(Bitmap.CompressFormat.PNG, 100, it)
             }
             screenshot.recycle()

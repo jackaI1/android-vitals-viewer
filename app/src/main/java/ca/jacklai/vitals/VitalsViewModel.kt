@@ -36,10 +36,16 @@ class VitalsViewModel(app: Application) : AndroidViewModel(app) {
         val pair = runCatching { validateSource(source) to validatePatient(patient) }.getOrElse {
             mutable.value = mutable.value.copy(message = "Enter a bridge URL and a valid fictional patient UUID."); return
         }
+        val previousSession = session
+        val previousSource = mutable.value.source
         session = ""
         mutable.value = ScreenState(pair.first, pair.second, busy = true)
         preferences.edit().putString("source", pair.first).putString("patient", pair.second).apply()
-        viewModelScope.launch { loadCache(); mutable.value = mutable.value.copy(busy = false, login = true) }
+        viewModelScope.launch {
+            if (previousSession.isNotEmpty()) runCatching { api.logout(previousSource, previousSession) }
+            loadCache()
+            mutable.value = mutable.value.copy(busy = false, login = true)
+        }
     }
     fun cancelLogin() { mutable.value = mutable.value.copy(login = false, message = "Sign-in cancelled. Saved snapshot is still available.") }
     fun authorized(cookie: String) {
